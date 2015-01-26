@@ -9,10 +9,14 @@ public class SuccinctDataNewFormNotification extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
+		try {
 		// Received a new form
 		String formData =  intent.getStringExtra("formData");
 		int length = formData.length();
 		Toast.makeText(context, "Succinct Data has sent a new form with length = " + Integer.toString(length), Toast.LENGTH_LONG).show();
+		} catch (Exception e) {
+			Toast.makeText(context, "Something bad happened: " + e.toString(), Toast.LENGTH_LONG).show();
+		}
 	}
 
 }
