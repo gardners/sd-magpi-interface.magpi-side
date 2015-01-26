@@ -28,7 +28,7 @@
                 <action android:name="org.servalproject.succinctdata.SuccinctDataTXNotification" />
             </intent-filter>
         </receiver>   
-        <receiver android:name="ReceiveSuccinctDataNewForm" >
+        <receiver android:name="SuccinctDataNewFormNotification" >
             <intent-filter>
                 <action android:name="org.servalproject.succinctdata.SuccinctDataNewFormNotification" />
             </intent-filter>
