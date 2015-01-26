@@ -1,9 +1,12 @@
 package org.servalproject.sd_magpi_interface.magpi_side;
 
 import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -12,6 +15,21 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
+        final Button button = (Button) findViewById(R.id.dispatchMagpiRecordToSD);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+            	Intent intent = new Intent();
+            	intent.putExtra("recordUUID","UUID-of-completed-record-as-a-string");
+            	intent.putExtra("recordData","xml of completed form record goes here as one long string");
+            	intent.putExtra("recordBundle","contents of ZIP file or other representation of completed record, including any images and other large media");
+            	intent.putExtra("formSpecification","xml of form specification file goes here as one long string");
+            	
+                intent.setAction("org.servalproject.succinctdata.ReceiveNewMagpiRecord");
+                sendBroadcast(intent);
+            }            
+        });
+
     }
 
 
