@@ -7,14 +7,24 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 
 public class MainActivity extends ActionBarActivity {
 
+	static int txNotifications = 0;
+	public static int newForms = 0;
+	public MainActivity me = null;
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
+        me = this;
+        ReceiveSuccinctDataTXNotification.setMainActivity(this);
+        SuccinctDataNewFormNotification.setMainActivity(this);
+        updateEventLabel();        
         
         final Button button = (Button) findViewById(R.id.dispatchMagpiRecordToSD);
         button.setOnClickListener(new View.OnClickListener() {
@@ -32,6 +42,14 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
+    protected void onResume() {
+    	  super.onResume();
+    	  updateEventLabel();
+    }
+
+    protected void onPause() {
+    	  super.onPause();
+      }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -51,4 +69,19 @@ public class MainActivity extends ActionBarActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+	public void sawNewForm(String formData) {
+		newForms++;
+		updateEventLabel();		
+	}
+
+	public void sawRecordTX(String uuid) {
+		txNotifications++;
+	}
+
+	private void updateEventLabel() {
+		TextView t = (TextView) findViewById(R.id.textView1);
+		t.setText(""+txNotifications+" TX notifications, " + newForms + " new forms.");
+	}
 }
