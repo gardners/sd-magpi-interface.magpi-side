@@ -9,8 +9,18 @@
     tools:context="org.servalproject.sd_magpi_interface.magpi_side.MainActivity" >
 
     <TextView
+        android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/hello_world" />
+
+    <Button
+        android:id="@+id/dispatchMagpiRecordToSD"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView1"
+        android:layout_below="@+id/textView1"
+        android:layout_marginTop="22dp"
+        android:text="Simulate dispatching Magpi Record to SD" />
 
 </RelativeLayout>
