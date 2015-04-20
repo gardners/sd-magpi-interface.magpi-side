@@ -1,8 +1,15 @@
 package org.servalproject.sd_magpi_interface.magpi_side;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import android.support.v7.app.ActionBarActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,15 +32,20 @@ public class MainActivity extends ActionBarActivity {
         ReceiveSuccinctDataTXNotification.setMainActivity(this);
         SuccinctDataNewFormNotification.setMainActivity(this);
         updateEventLabel();        
-        
+
+    	Context context = (Context)this;
+    	final String form = loadAssetTextAsString(context,"example.xhtml");
+    	final String record = loadAssetTextAsString(context,"example.xml");
+    	final String record_uuid = loadAssetTextAsString(context,"example.uuid");
+
         final Button button = (Button) findViewById(R.id.dispatchMagpiRecordToSD);
         button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
+            public void onClick(View v) {            	
             	Intent intent = new Intent();
-            	intent.putExtra("recordUUID","UUID-of-completed-record-as-a-string");
-            	intent.putExtra("recordData","xml of completed form record goes here as one long string");
+            	intent.putExtra("recordUUID",record_uuid);
+            	intent.putExtra("recordData",record);
             	intent.putExtra("recordBundle","contents of ZIP file or other representation of completed record, including any images and other large media");
-            	intent.putExtra("formSpecification","xml of form specification file goes here as one long string");
+            	intent.putExtra("formSpecification",form);
             	
                 intent.setAction("org.servalproject.succinctdata.ReceiveNewMagpiRecord");
                 sendBroadcast(intent);
@@ -42,6 +54,38 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
+    private String loadAssetTextAsString(Context context, String name) {
+        BufferedReader in = null;
+        try {
+            StringBuilder buf = new StringBuilder();
+            InputStream is = context.getAssets().open(name);
+            in = new BufferedReader(new InputStreamReader(is));
+
+            String str;
+            boolean isFirst = true;
+            while ( (str = in.readLine()) != null ) {
+                if (isFirst)
+                    isFirst = false;
+                else
+                    buf.append('\n');
+                buf.append(str);
+            }
+            return buf.toString();
+        } catch (IOException e) {
+            Log.e("sd-magpi-test", "Error opening asset " + name);
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    Log.e("sd-magpi-test", "Error closing asset " + name);
+                }
+            }
+        }
+
+        return null;
+    }
+    
     protected void onResume() {
     	  super.onResume();
     	  updateEventLabel();
